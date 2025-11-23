@@ -1,0 +1,12 @@
+# Arquivos de cache e ambiente Python
+__pycache__/
+*.pyc
+.env
+venv/
+
+# Arquivos de sistema
+.DS_Store
+
+# Logs e resultados de execução
+*.log
+results/

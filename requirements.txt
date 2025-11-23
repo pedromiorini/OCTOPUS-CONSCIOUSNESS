@@ -1,0 +1,4 @@
+# Arquivo de dependências para o projeto Consciência Polvo.
+# No momento, este projeto é conceitual e não possui dependências externas.
+# Adicione bibliotecas como 'requests' ou 'beautifulsoup4' para o TentaculoBusca,
+# ou 'torch' para modelos de IA reais.
