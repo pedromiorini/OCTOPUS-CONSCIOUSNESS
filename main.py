@@ -1,40 +1,85 @@
 # main.py
-# Ponto de entrada para a simulação da Arquitetura Consciência Polvo.
-# Autor: Pedro Miorini
+import asyncio
+import logging
+from typing import Dict, Any
 
-from src.manto.agente_manto import Manto, RedeDeTentaculos
-from src.tentaculos.tentaculo_codigo import TentaculoCodigo
-from src.tentaculos.tentaculo_busca import TentaculoBusca
+# Configuração de Logging
+logging.basicConfig(level=logging.INFO, format=\'[%(levelname)s] %(name)s: %(message)s\')
 
-def main():
-    """
-    Função principal que inicializa e executa a simulação.
-    """
-    print("="*70)
-    print("🔥 PROJETO CONSCIÊNCIA POLVO v1.0 - INICIANDO SIMULAÇÃO 🔥")
-    print("="*70)
+# Importações dos componentes do sistema
+from src.cognitive.cerebro import Cerebro
+from src.shared.comunicacao import BarramentoEventos, Evento
+from src.manto.consciencia_central import ConscienciaCentral
 
-    # 1. Inicializar os tentáculos especialistas
-    print("\n[1/3] Inicializando a rede de tentáculos especialistas...")
-    try:
-        tentaculo1 = TentaculoBusca(id_tentaculo=1)
-        tentaculo2 = TentaculoCodigo(id_tentaculo=2)
-        # Futuros tentáculos (ex: TentaculoTreinamento, TentaculoAnaliseDados) podem ser adicionados aqui.
+# --- Simulação dos Módulos dos Tentáculos ---
+# Como não podemos criar todos os arquivos aqui, vamos simular as classes
+# para que o main.py seja executável e demonstre a estrutura.
+
+class MockTentaculo:
+    def __init__(self, nome, cerebro, barramento):
+        self.nome = nome
+        self.cerebro = cerebro
+        self.barramento = barramento
+        logging.info(f"🦾 Tentáculo \'{nome}\' instanciado (Mock).")
+
+    async def pode_executar(self, tarefa: str) -> bool:
+        return True
+
+    async def executar_tarefa(self, tarefa: str, **kwargs) -> dict:
+        # Simulação de execução de tarefa
+        if "wikipedia" in tarefa.lower():
+            return {"sucesso": True, "dados": "Definição de Dívida Técnica da Wikipedia."}
+        if "fmea" in tarefa.lower():
+            return {"sucesso": True, "dados": "Plano FMEA gerado."}
         
-        rede = RedeDeTentaculos([tentaculo1, tentaculo2])
-        print("✓ Rede de tentáculos online.")
-    except Exception as e:
-        print(f"❌ Erro ao inicializar tentáculos: {e}")
-        return
+        # Simula a chamada ao cérebro para tarefas genéricas
+        resposta = self.cerebro.gerar_pensamento(f"Tarefa do Tentáculo {self.nome}: {tarefa}")
+        return {"sucesso": True, "dados": resposta}
 
-    # 2. Ativar a consciência central (Manto)
-    print("\n[2/3] Ativando o Manto (Consciência Central)...")
-    consciencia_central = Manto(rede)
+# --- Fim da Simulação ---
+
+async def main():
+    """Função principal que inicializa e executa o OCTOPUS-CONSCIOUSNESS."""
+    print("--- INICIALIZANDO O ORGANISMO OCTOPUS-CONSCIOUSNESS v2.0 ---")
     
-    # 3. Definir e executar um objetivo macro
-    print("\n[3/3] Delegando objetivo macro para o Manto...")
-    objetivo = "Pesquisar e analisar os principais frameworks de IA autônoma disponíveis publicamente."
-    consciencia_central.decompor_e_orquestrar(objetivo)
+    # 1. Inicializar componentes do núcleo
+    barramento = BarramentoEventos()
+    cerebro = Cerebro()
+    
+    # 2. Inicializar todos os tentáculos especialistas
+    # Em uma implementação real, importaríamos e instanciaríamos as classes reais.
+    # Por agora, usamos os Mocks para demonstrar a estrutura.
+    tentaculos: Dict[str, MockTentaculo] = {
+        "Busca": MockTentaculo("Busca", cerebro, barramento),
+        "Codigo": MockTentaculo("Codigo", cerebro, barramento),
+        "Kaizen": MockTentaculo("Kaizen", cerebro, barramento),
+        "Seiri": MockTentaculo("Seiri", cerebro, barramento),
+        "Daedalus": MockTentaculo("Daedalus", cerebro, barramento),
+        "Prometheus": MockTentaculo("Prometheus", cerebro, barramento),
+        "Wikipediana": MockTentaculo("Wikipediana", cerebro, barramento),
+        "Estrategista": MockTentaculo("Estrategista", cerebro, barramento),
+    }
+    
+    # 3. Inicializar o Manto (Consciência Central)
+    manto = ConscienciaCentral(cerebro, barramento, tentaculos)
+    
+    # 4. Assinar o Manto a eventos de alto nível (ex: novas missões)
+    # Esta parte seria conectada à Interface ou a um sistema de agendamento.
+    
+    print("\n--- ORGANISMO PRONTO. INICIANDO MISSÃO DE DEMONSTRAÇÃO ---")
+    
+    # 5. Executar uma missão de demonstração complexa
+    missao_complexa = (
+        "Analisar o conceito de \'dívida técnica\', buscar na wikipedia sua definição, "
+        "e criar um plano de análise de risco (FMEA) para mitigar a dívida técnica em um projeto."
+    )
+    
+    await manto.processar_missao(missao_complexa)
+    
+    print("\n--- MISSÃO DE DEMONSTRAÇÃO CONCLUÍDA ---")
 
 if __name__ == "__main__":
-    main()
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logging.info("Sistema interrompido pelo usuário.")
